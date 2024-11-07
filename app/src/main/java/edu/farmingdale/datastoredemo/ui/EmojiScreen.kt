@@ -65,61 +65,70 @@ fun EmojiReleaseApp(
 /*
  * This is emoji Screen Composable with a Top Bar, Layout Toggle, and Dark Mode Toggle
  */
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EmojiScreen(
     uiState: EmojiReleaseUiState,
     selectLayout: (Boolean) -> Unit
 ) {
+    val context = LocalContext.current
+    var isDarkTheme by rememberSaveable { mutableStateOf(false) } // Toggle for dark theme
     val isLinearLayout = uiState.isLinearLayout
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.top_bar_name)) },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            selectLayout(!isLinearLayout)
+
+    // Apply the theme with the correct `isDarkTheme` toggle
+    DataStoreDemoTheme(darkTheme = isDarkTheme) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(stringResource(R.string.top_bar_name)) },
+                    actions = {
+                        // Toggle layout button (grid or list)
+                        IconButton(
+                            onClick = {
+                                selectLayout(!isLinearLayout)
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(uiState.toggleIcon),
+                                contentDescription = stringResource(uiState.toggleContentDescription),
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
                         }
-                    ) {
-                        Icon(
-                            painter = painterResource(uiState.toggleIcon),
-                            contentDescription = stringResource(uiState.toggleContentDescription),
-                            tint = MaterialTheme.colorScheme.onBackground
+                        // Toggle dark mode switch
+                        Switch(
+                            checked = isDarkTheme,
+                            onCheckedChange = { isDarkTheme = it } // Update theme toggle
                         )
-                    }
-
-
-                },
-                colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.inversePrimary
+                    },
+                    colors = TopAppBarDefaults.largeTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.inversePrimary
+                    )
                 )
-            )
-        }
-    ) { innerPadding ->
-        val modifier = Modifier
-            .padding(
-                top = dimensionResource(R.dimen.padding_medium),
-                start = dimensionResource(R.dimen.padding_medium),
-                end = dimensionResource(R.dimen.padding_medium),
-            )
-        if (isLinearLayout) {
-            EmojiReleaseLinearLayout(
-                modifier = modifier.fillMaxWidth(),
-                contentPadding = innerPadding
-            )
-        } else {
-            EmojiReleaseGridLayout(
-                modifier = modifier,
-                contentPadding = innerPadding,
-            )
+            }
+        ) { innerPadding ->
+            val modifier = Modifier
+                .padding(
+                    top = dimensionResource(R.dimen.padding_medium),
+                    start = dimensionResource(R.dimen.padding_medium),
+                    end = dimensionResource(R.dimen.padding_medium),
+                )
+            if (isLinearLayout) {
+                EmojiReleaseLinearLayout(
+                    modifier = modifier.fillMaxWidth(),
+                    contentPadding = innerPadding
+                )
+            } else {
+                EmojiReleaseGridLayout(
+                    modifier = modifier,
+                    contentPadding = innerPadding,
+                )
+            }
         }
     }
 }
 
 /*
- * this is linear layout composable to display emojis in a list format
+ * thi is linear layout composable to display emojis in a list format
  */
 @Composable
 fun EmojiReleaseLinearLayout(
