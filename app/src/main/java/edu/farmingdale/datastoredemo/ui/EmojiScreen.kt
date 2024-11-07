@@ -64,6 +64,7 @@ fun EmojiReleaseApp(
 
 /*
  * This is emoji Screen Composable with a Top Bar, Layout Toggle, and Dark Mode Toggle
+ * it's resposible for dark and light mode for the app
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +73,7 @@ private fun EmojiScreen(
     selectLayout: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
-    var isDarkTheme by rememberSaveable { mutableStateOf(false) } // Toggle for dark theme
+    var isDarkTheme by rememberSaveable { mutableStateOf(false) } // Toggle for light-dark theme
     val isLinearLayout = uiState.isLinearLayout
 
     // Apply the theme with the correct `isDarkTheme` toggle
@@ -129,6 +130,8 @@ private fun EmojiScreen(
 
 /*
  * thi is linear layout composable to display emojis in a list format
+ * this is responsible for the linear layout
+ * toast to make it clickable
  */
 @Composable
 fun EmojiReleaseLinearLayout(
@@ -168,6 +171,8 @@ fun EmojiReleaseLinearLayout(
 
 /*
  * Grid layout composable to display emojis in a grid format
+ * this is responsible for the grid layout
+ * using toast to make it clickable
  */
 @Composable
 fun EmojiReleaseGridLayout(
